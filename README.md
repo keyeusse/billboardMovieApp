@@ -1,7 +1,9 @@
 # billboardMovieApp
 This project is a challenge by Rappi
 
-![ScreenShot](https://github.com/richimf/TheMovieApp/blob/develop/screenshots/p1.png)
+
+## Video
+![ScreenShot](https://github.com/keyeusse/billboardMovieApp/blob/develop/BillboardVideo.mov)
 
 ## Run project
 
@@ -67,7 +69,4 @@ App has a VIPPER ARCHITECTURE, for that reason, this is the structrute inside it
    Un buen código comienza desde que es legible, variables simples, comentado, enfocado a las estructuras de datos mas que a las librerias o el lenguaje. Envitar errores de ausencia de datos `nil values`. 
     Detectar si el código se repite mucho, entonces es factible una refactorización y quizas el uso de patrones de diseño pueda ser una solución *(sin caer en los antipatrones)*. La declaración explicita de datos, con el fin de ser claros en nuestros valores y evitar inferencia de tipos, entre otras técnicas. Respetar la arquitectura establecida. Y el uso de Unit Tests para asegurar el funcionamiento correcto del proyecto. 
 
-## Video
-
-![ScreenShot](https://github.com/richimf/TheMovieApp/blob/develop/screenshots/1.gif)
 
