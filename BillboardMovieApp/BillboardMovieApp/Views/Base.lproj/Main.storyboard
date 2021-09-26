@@ -29,7 +29,7 @@
                                 <rect key="frame" x="8" y="765" width="398" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dzn-E3-I8H">
-                                        <rect key="frame" x="412" y="0.0" width="40" height="40"/>
+                                        <rect key="frame" x="413" y="0.0" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="9Q9-cp-xAA"/>
                                             <constraint firstAttribute="width" constant="40" id="nCa-uL-VPz"/>
@@ -39,7 +39,7 @@
                                         </connections>
                                     </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="xBu-tj-MW1">
-                                        <rect key="frame" x="-7" y="5" width="411" height="32"/>
+                                        <rect key="frame" x="-6" y="9" width="411" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                         <segments>
                                             <segment title="Cat1"/>
