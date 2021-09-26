@@ -11,36 +11,27 @@ protocol CategoryFilterDelegate: AnyObject {
 }
 class CategoryFilterViewController: UIViewController {
   
-  // IBOUTLETS
+  // IBOutlet of VC
   @IBOutlet private weak var tableView: UITableView!
   @IBOutlet weak var clearButton: UIButton!
   @IBOutlet weak var filterButton: RoundButton!
   
-  // PRIVATE VARS
-  private var colors: [UIColor] = []
-  
-  // DELEGATE
+  // Delegate
   var delegate: CategoryFilterDelegate?
   
-  // DATA
+  // Data from genre
   var items: [Genre] = []
   var selectedGenresIds: [Int] = []
   
-  // CONSTANTS
-  private let cellHeight: CGFloat = 175.0
-  private lazy var identifier: String = CategoryTableViewCell.reuseIdentifier()
+  // cellId for table
+  private lazy var cellId: String = CategoryTableViewCell.reuseIdentifier()
   
   override func viewDidLoad() {
     super.viewDidLoad()
 
     //Select items previously selected
     defaultSelectedItems()
-    // Do any additional setup after loading the view.
     setupTableView()
-    // Generate Rows colors
-    for _ in 0..<items.count {
-      colors.append(UIColor.random)
-    }
   }
   
   @IBAction func filter(_ sender: Any) {
@@ -60,8 +51,8 @@ class CategoryFilterViewController: UIViewController {
     self.tableView.backgroundColor = UIColor.white
     self.tableView.delegate = self
     self.tableView.dataSource = self
-    self.tableView.estimatedRowHeight = cellHeight
-    self.tableView.register(CategoryTableViewCell.nib(), forCellReuseIdentifier: identifier)
+    self.tableView.estimatedRowHeight = 170.0
+    self.tableView.register(CategoryTableViewCell.nib(), forCellReuseIdentifier: cellId)
   }
 }
 extension CategoryFilterViewController: UITableViewDelegate, UITableViewDataSource {
@@ -71,10 +62,10 @@ extension CategoryFilterViewController: UITableViewDelegate, UITableViewDataSour
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? CategoryTableViewCell else
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? CategoryTableViewCell else
     { return UITableViewCell() }
     let item = items[indexPath.row]
-    cell.setupView(item: item, color: colors[indexPath.row], select: item.selected)
+    cell.setupView(item: item, select: item.selected)
     performSelectionAt(tableView, at: indexPath, select: items[indexPath.row].selected )
     return cell
   }
