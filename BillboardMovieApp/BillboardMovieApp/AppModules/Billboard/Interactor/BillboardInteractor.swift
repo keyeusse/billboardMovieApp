@@ -2,18 +2,16 @@
 //  BillboardInteractor.swift
 //  BillboardMovieApp
 //
-//  Created by Meli on 9/25/21.
+//  Created by Meli on 9/26/21.
 
 import UIKit
 
 class CatalogInteractor: CatalogInteractorInputProtocol {
   
-  // MARK: - VIPER
   weak var presenter: CatalogInteractorOutputProtocol?
   private let apiClient = APIClient()
   private var movieResults: MovieResults?
   
-  // DATA
   private var popular: [Movie] = []
   private var topRated: [Movie] = []
   private var upcoming: [Movie] = []
@@ -21,28 +19,30 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
   var genresCategories: [Genre] = []
   var genresFilteredIds: [Int] = []
   
-  // CACHE
+  // This is for cache
   var cacheDataManager: CacheDataManager = CacheDataManager()
   
-  // FILTERS
   private var filteredData: [Movie] = []
   
-  // MARK: - REQUEST DATA
+  // REquest data to load movies and images
   func fetchMoviesData() {
-    if Connectivity.isConnectedToInternet {
+    if ConnectivityToIntenet.isConnectedToInternet {
       apiClient.delegate = self
-      // Request Genres
-      apiClient.fetchGenreListOf(url: .genreTV, release: .none, lang: .MX)
-      apiClient.fetchGenreListOf(url: .genreMovie, release: .none, lang: .MX)
-      // Request Movie and TV shows List
-      apiClient.fetchMovieListOf(url: .movie, release: .popular,  lang: .MX)
-      apiClient.fetchMovieListOf(url: .movie, release: .topRated, lang: .MX)
-      apiClient.fetchMovieListOf(url: .movie, release: .upcoming, lang: .MX)
-      apiClient.fetchMovieListOf(url: .tv, release: .popular,  lang: .MX)
-      apiClient.fetchMovieListOf(url: .tv, release: .topRated, lang: .MX)
-      apiClient.fetchMovieListOf(url: .tv, release: .upcoming, lang: .MX)
+      // Request fot Genres list
+      apiClient.getGenreList(url: .genreTV, release: .none, lang: .US)
+      apiClient.getGenreList(url: .genreMovie, release: .none, lang: .US)
+        
+      // Request for Movie list by genre
+      apiClient.getMovieList(url: .movie, release: .popular,  lang: .US)
+      apiClient.getMovieList(url: .movie, release: .topRated, lang: .US)
+      apiClient.getMovieList(url: .movie, release: .upcoming, lang: .US)
+        
+      // Request for Movie list and TV shows List
+      apiClient.getMovieList(url: .tv, release: .popular,  lang: .US)
+      apiClient.getMovieList(url: .tv, release: .topRated, lang: .US)
+      apiClient.getMovieList(url: .tv, release: .upcoming, lang: .US)
     } else {
-      // Load from local storage
+      // get data from local storage
       let update: () -> Void = { self.presenter?.updateData() }
       loadFromLocalStorage(category: .popular, completion: update)
       loadFromLocalStorage(category: .topRated, completion: update)
@@ -52,14 +52,14 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
   
   func loadFromLocalStorage(category: Category, completion: @escaping () -> Void) {
     let dataManager = DataManager()
-    dataManager.retrieveMoviesData(from: category.rawValue) {
+    dataManager.getMoviesData(from: category.rawValue) {
       if category == .popular  { self.popular = $0 }
       if category == .topRated { self.topRated = $0 }
       if category == .upcoming { self.upcoming = $0 }
       self.appendSection(category)
       completion()
     }
-    dataManager.retreiveGenres { genres in
+    dataManager.getGenres { genres in
       self.genresCategories = genres ?? []
     }
   }
@@ -67,9 +67,9 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
   func getImageFromLocalStorage(key: String) -> UIImage? {
     // Get image From Local Storage
     var image: UIImage?
-    if !Connectivity.isConnectedToInternet {
+    if !ConnectivityToIntenet.isConnectedToInternet {
       let dataManager = DataManager()
-      dataManager.retrieveImageDataFrom(key: key) { data in
+      dataManager.getImageDataFrom(key: key) { data in
         guard let data = data else { return }
         image =  UIImage(data: data)
       }
@@ -77,7 +77,7 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
     return image
   }
   
-  // MARK: - FILTERING DATA
+  // For data filter
   func filterSearch(text: String) {
     if text.isEmpty {
       self.filteredData = []
@@ -106,7 +106,6 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
     return results
   }
   
-  // MARK: - FILTERING BY GENRE
   func filterByGenre(_ ids: [Int]) {
     self.genresFilteredIds = ids
     if ids.isEmpty {
@@ -133,12 +132,12 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
     return results
   }
   
-  // MARK: - GET NUMBER OF ITEMS AT
+
   func getNumberOfItemsAt(_ index: Int, isFiltering: Bool) -> Int {
     return isFiltering ? filteredData.count : getNumberOfItems(index)
   }
   
-  //TODO: CHANGE ALL THIS SWITCH STATEMENTS TO "STATE-PATTERN"
+    //button search selection
   private func getNumberOfItems(_ index: Int) -> Int {
     let section = sections[index]
     switch section {
@@ -152,8 +151,7 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
       return 0
     }
   }
-  
-  // MARK: - GET DATA FROM OR ITEM AT
+
   func getItemAt(_ indexPath: IndexPath, isFiltering: Bool) -> Movie? {
     if indexPath.row < filteredData.count && isFiltering {
       return filteredData[indexPath.row]
@@ -167,7 +165,7 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
     return getDataFrom(section: section, at: indexPath.row)
   }
   
-  func getDataFrom(section: APIMovieParams, at row: Int) -> Movie? {
+  func getDataFrom(section: APIMovieCategoryParams, at row: Int) -> Movie? {
     switch section {
     case .popular:
       return popular[row]
@@ -198,10 +196,10 @@ class CatalogInteractor: CatalogInteractorInputProtocol {
   }
 }
 
-// MARK: - API RESPONSE
+//API Calls for movies and series
 extension CatalogInteractor: APIResponseProtocol {
   
-  func fetchedGenres(data: Genres) {
+  func getMovieGenres(data: Genres) {
     let local = DataManager()
     data.categories.forEach { genre in
       if !genresCategories.contains(genre){
@@ -211,13 +209,11 @@ extension CatalogInteractor: APIResponseProtocol {
     }
   }
   
-  func fetchedResult(data: MovieResults) {
+  func getMovieResult(data: MovieResults) {
     if let section = data.category, let movies = data.results {
-      // Append section
       appendSection(section)
-      // Store
       storeMovies(movies: movies, category: section)
-      // Append elements to each section
+        
       switch section {
       case .popular:
         self.popular.append(contentsOf: movies)
@@ -232,9 +228,8 @@ extension CatalogInteractor: APIResponseProtocol {
     self.presenter?.updateData()
   }
   
-  // PRIVATE METHODS
+
   private func appendSection(_ section: Category) {
-    // Append section
     if !self.sections.contains(section) {
       self.sections.append(section)
     }
@@ -247,7 +242,7 @@ extension CatalogInteractor: APIResponseProtocol {
     }
   }
   
-  // MARK: - ERROR RESPONSE
+  // Manage error response
   func onFailure(_ error: Error) {
     presenter?.receivedError(error)
   }

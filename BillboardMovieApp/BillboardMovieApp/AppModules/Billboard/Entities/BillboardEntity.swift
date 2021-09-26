@@ -7,7 +7,7 @@
 import ObjectMapper
 
 /// Object used to map all the response from the service
-public typealias Category = APIMovieParams
+public typealias Category = APIMovieCategoryParams
 public struct MovieResults {
   var totalPages: Int?
   var results: [Movie]?

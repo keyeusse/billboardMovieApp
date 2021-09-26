@@ -22,7 +22,7 @@ class CategoryTableViewCell: UITableViewCell, UITableViewCellReusableView {
     self.backgroundColor = UIColor.clear
   }
   
-  func setupView(item: Genre, color: UIColor, select: Bool = false) {
+  func setupView(item: Genre, select: Bool = false) {
     self.item = item
     setup(selected: select)
     self.label.textColor = UIColor.blue

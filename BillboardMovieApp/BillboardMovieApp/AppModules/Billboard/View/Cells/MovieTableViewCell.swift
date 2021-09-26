@@ -48,7 +48,7 @@ class MovieTableViewCell: UITableViewCell, UITableViewCellReusableView {
   }
   
   @IBAction func watchTrailer(_ sender: Any) {
-    self.buttonWatch.bounce()
+    //self.buttonWatch.bounce()
     guard let movie = movie else { return }
     delegate?.showMovieTrailer(of: movie)
   }

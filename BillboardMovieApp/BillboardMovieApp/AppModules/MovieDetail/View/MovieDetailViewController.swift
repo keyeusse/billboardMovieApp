@@ -15,42 +15,38 @@ class MovieDetailViewController: UIViewController {
   @IBOutlet private weak var labelMovieDetails: UILabel!
   @IBOutlet private weak var buttonWatchTrailer: RoundButton!
   @IBOutlet private weak var textViewMovieDescription: UITextView!
-    @IBOutlet weak var rattingLabel: UILabel!
+  @IBOutlet weak var rattingLabel: UILabel!
   
-  // MARK: - VIPER
    var presenter: MovieDetailPresenterProtocol?
   
   private var movie: Movie?
   
   private let nowPlayingTitle: String = "Playing trailer"
   private let notAvailableTitle: String = "Trailer No Available"
+    
+  @IBAction func watchTrailer(_ sender: Any) {
+      presenter?.loadTrailerVideo()
+  }
 
-  // observe videokey changes then perform loading
+  // Show video trailer from youtube
   private var videoKey: String = "" {
     didSet {
       if !videoKey.isEmpty {
         self.imageCover.isHidden = true
-        self.viewPlayerVideo.load(withVideoId: videoKey, playerVars: YouTubeParams)
+        self.viewPlayerVideo.load(withVideoId: videoKey, playerVars: VideoYouTubeParams)
       }
     }
   }
   
-  // MARK: - OVERRIDES
   override func viewDidLoad() {
     super.viewDidLoad()
     self.imageCover.alpha = 0
     presenter?.loadDetails()
     self.viewPlayerVideo.delegate = self
   }
-
-  @IBAction func watchTrailer(_ sender: Any) {
-    buttonWatchTrailer.bounce()
-    presenter?.loadVideo()
-  }
-    
 }
 
-// MARK: - DETAIL VIEW PROTOCOL
+// Protocols
 extension MovieDetailViewController: MovieDetailViewProtocol {
   
   func loadMovieImage(_ image: UIImage) {
@@ -77,7 +73,7 @@ extension MovieDetailViewController: MovieDetailViewProtocol {
     }
   }
   
-  func loadTailerVideo(_ key: String?) {
+  func loadTrailerVideo(_ key: String?) {
     if let key = key{
       self.videoKey = key
       self.buttonWatchTrailer.setTitle(self.nowPlayingTitle, for: .normal)
@@ -93,7 +89,7 @@ extension MovieDetailViewController: MovieDetailViewProtocol {
   }
 }
 
-// MARK: - YOUTUBE VIDEO PROTOCOLS
+// Protocol to youtube video
 extension MovieDetailViewController : YTPlayerViewDelegate {
   func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
     self.viewPlayerVideo.playVideo()

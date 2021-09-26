@@ -14,18 +14,13 @@ class CatalogViewController: UIViewController {
   @IBOutlet private weak var buttonSearch: UIBarButtonItem!
   @IBOutlet weak var FilterCatButton: UIBarButtonItem!
     @IBOutlet weak var filterButton: UIButton!
-    // IDENTIFIERS
-  private lazy var identifier: String = MovieTableViewCell.reuseIdentifier()
-  
-  // TRANSITION
-  let viewTransitionHelper = ViewTransitionHelper()
-  
     
-    @IBAction func filterCategory(_ sender: Any) {
-        presenter?.showFilterView(from: self, transitioningDelegate: self)
-    }
-    // CONSTANTS
-  private let cellHeight: CGFloat = 175.0
+// Cell id
+  private lazy var idCell: String = MovieTableViewCell.reuseIdentifier()
+  
+
+  
+// Constants
   private let titleNavigation: String = "Billboard"
   private let fontSection: UIFont? = UIFont(name: "Futura", size: 20)
   private var currentSectionNumber = 0
@@ -37,8 +32,11 @@ class CatalogViewController: UIViewController {
   // MARK: - VIPER
   var presenter: CatalogPresenterProtocol?
   let imageDownloader: ImageDownloader = ImageDownloader()
+    
+    // new view to filter movie
+  let filterMovieView = CreationViewAnimation()
   
-  // OVERRIDES
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setup()
@@ -52,7 +50,7 @@ class CatalogViewController: UIViewController {
     self.tableView.reloadData()
   }
   
-  // MARK: - IBACTIONS
+  // Action buttons
   @IBAction func segmentedActions(_ sender: Any) {
     let section: Int = segmentedControl.selectedSegmentIndex
     segmentedControl.selectedSegmentIndex = section
@@ -64,7 +62,11 @@ class CatalogViewController: UIViewController {
   }
   
   @IBAction func presentFilterGenresView(_ sender: Any) {
-    filterButton.bounce()
+    //filterButton.bounce()
+    presenter?.showFilterView(from: self, transitioningDelegate: self)
+  }
+    
+  @IBAction func filterCategory(_ sender: Any) {
     presenter?.showFilterView(from: self, transitioningDelegate: self)
   }
   
@@ -94,9 +96,9 @@ class CatalogViewController: UIViewController {
   private func setupTableView() {
     self.tableView.delegate = self
     self.tableView.dataSource = self
-    self.tableView.estimatedRowHeight = cellHeight
+    self.tableView.estimatedRowHeight = 175.0
     self.tableView.rowHeight = UITableView.automaticDimension
-    self.tableView.register(MovieTableViewCell.nib(), forCellReuseIdentifier: identifier)
+    self.tableView.register(MovieTableViewCell.nib(), forCellReuseIdentifier: idCell)
   }
   
   private func setupSearchController() {
@@ -138,7 +140,6 @@ class CatalogViewController: UIViewController {
     self.tableView.endUpdates()
   }
 
-
 }
 
 extension CatalogViewController: CatalogViewProtocol {
@@ -154,7 +155,7 @@ extension CatalogViewController: CatalogViewProtocol {
   }
 }
 
-// MARK: - TABLEVIEW Delegate & DataSource
+// MARK: - Movie tableView Delegate and DataSource
 extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
   
   func numberOfSections(in tableView: UITableView) -> Int {
@@ -172,18 +173,18 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     currentSectionNumber = indexPath.section
     guard let movie = getItemAt(indexPath),
-          let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? MovieTableViewCell
+          let cell = tableView.dequeueReusableCell(withIdentifier: idCell) as? MovieTableViewCell
       else { return UITableViewCell()}
-    // GET IMAGE FROM LOCAL
+    
+    // setup images fron local storage
     let key = getURL(of: movie)
     if let imageFromStorage = presenter?.getImageFromLocalStorage(key: key as String) {
       cell.setup(with: movie, image: imageFromStorage)
     } else {
-    // DOWNLOAD IMAGE
-      let imageDownloaded = imageDownloader.loadCompressedImage(of: movie) { self.reloadRowAt(indexPath) }
+    // No local storage, call api to download image
+      let imageDownloaded = imageDownloader.loadImages(of: movie) { self.reloadRowAt(indexPath) }
       cell.setup(with: movie, image: imageDownloaded)
     }
-    cell.delegate = self
     return cell
   }
     
@@ -202,7 +203,7 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
   }
 
 }
-// MARK: - SEARCHBAR Delegate
+// SEARCHBAR Delegate
 extension CatalogViewController: UISearchResultsUpdating, UISearchBarDelegate {
   
   func updateSearchResults(for searchController: UISearchController) {
@@ -226,28 +227,22 @@ extension CatalogViewController: UISearchResultsUpdating, UISearchBarDelegate {
   }
 }
 
-// MARK: - CELL Delegate Protocol
-extension CatalogViewController: MovieTableViewCellDelegate {
-  func showMovieTrailer(of movie: Movie) {
-    //presenter?.showVideoPreview(for: movie, from: self)
-  }
-}
 
-// MARK: - CUSTOM TRANSITION DELEGATE
+// MARK: - New view to show filter feature
 extension CatalogViewController: UIViewControllerTransitioningDelegate {
 
     
   func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    self.viewTransitionHelper.transitionMode = .present
-    self.viewTransitionHelper.startingPoint = self.filterButton.center
-    self.viewTransitionHelper.circleColor = self.filterButton.backgroundColor ?? UIColor.white
-    return self.viewTransitionHelper
+    self.filterMovieView.transition = .present
+    self.filterMovieView.appearPoint = self.filterButton.center
+    self.filterMovieView.newViewColor = self.filterButton.backgroundColor ?? UIColor.white
+    return self.filterMovieView
   }
   
   func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    self.viewTransitionHelper.transitionMode = .dismiss
-    self.viewTransitionHelper.startingPoint = self.filterButton.center
-    self.viewTransitionHelper.circleColor = self.filterButton.backgroundColor ?? UIColor.white
-    return self.viewTransitionHelper
+    self.filterMovieView.transition = .dismiss
+    self.filterMovieView.appearPoint = self.filterButton.center
+    self.filterMovieView.newViewColor = self.filterButton.backgroundColor ?? UIColor.white
+    return self.filterMovieView
   }
 }

@@ -8,7 +8,7 @@ import UIKit
 
 class MovieDetailPresenter: MovieDetailPresenterProtocol {
   
-  // MARK: - VIPER
+  //VIPER protocols
   weak var view: MovieDetailViewProtocol?
   var interactor: MovieDetailInteractorInputProtocol?
   var router: MovieDetailRouterProtocol?
@@ -27,11 +27,11 @@ class MovieDetailPresenter: MovieDetailPresenterProtocol {
     interactor?.loadImage(of: movie)
   }
   
-  func loadVideo() {
+  func loadTrailerVideo() {
     guard let movie = self.movie else { return }
     let apiclient = APIClient()
-    apiclient.fetchYouTubeKey(of: movie) { key in
-      self.view?.loadTailerVideo(key)
+    apiclient.getYouTubeKey(of: movie) { key in
+      self.view?.loadTrailerVideo(key)
     }
   }
   

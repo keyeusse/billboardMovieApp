@@ -6,6 +6,7 @@
 
 import UIKit
 
+//Class to navegatio between VC
 class CatalogRouter: CatalogRouterProtocol {
   
   typealias CatalogPresenterProtocols = CatalogPresenterProtocol & CatalogInteractorOutputProtocol

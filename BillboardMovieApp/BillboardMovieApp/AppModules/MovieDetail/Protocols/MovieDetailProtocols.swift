@@ -2,17 +2,17 @@
 //  MovieDetailProtocols.swift
 //  BillboardMovieApp
 //
-//  Created by Meli on 9/25/21.
+//  Created by Meli on 9/26/21.
 
 import UIKit
 
-// MARK: - VIPER Protocols
+// VIPER Protocols
 protocol MovieDetailViewProtocol: AnyObject {
   var presenter: MovieDetailPresenterProtocol? { get set }
   // PRESENTER -> VIEW
   func loadMovieDetails(_ movie: Movie)
   func loadMovieImage(_ image: UIImage)
-  func loadTailerVideo(_ key: String?)
+  func loadTrailerVideo(_ key: String?)
   func showErrorMessage(_ message: String)
 }
 
@@ -23,7 +23,7 @@ protocol MovieDetailPresenterProtocol: AnyObject {
   // VIEW -> PRESENTER
   var title: String? { get set }
   func loadDetails()
-  func loadVideo()
+  func loadTrailerVideo()
 }
 
 protocol MovieDetailInteractorInputProtocol: AnyObject {

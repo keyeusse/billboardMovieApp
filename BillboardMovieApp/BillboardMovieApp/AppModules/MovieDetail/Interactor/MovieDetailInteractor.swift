@@ -8,30 +8,29 @@ import UIKit
 
 class MovieDetailInteractor: MovieDetailInteractorInputProtocol {
   
-  // MARK: - VIPER
+
   weak var presenter: MovieDetailInteractorOutputProtocol?
   
-  // CACHE
   var cacheDataManager: CacheDataManager = CacheDataManager()
   private let dataManager = DataManager()
-  
   var coverImage: UIImage?
+    
   
-  // MARK: - METHODS
   func loadImage(of movie: Movie) {
     let key = NSString(string: "\(String(describing: movie.id))backdropImage")
-    // GET FROM LOCAL
-    if !Connectivity.isConnectedToInternet {
+    
+    // get from local cache
+    if !ConnectivityToIntenet.isConnectedToInternet {
       getOfflineImageWith(key: key as String)
       return
     }
-    // LOAD FROM CACHE
+    
     let cache = cacheDataManager.imageCache
     if let cachedImage = cache.object(forKey: key) {
       self.coverImage = cachedImage
       presenter?.loadImage(cachedImage)
     } else {
-      //DOWNLOAD
+      //call to api
       downloadImage(of: movie, key: key as String)
     }
   }
@@ -39,17 +38,17 @@ class MovieDetailInteractor: MovieDetailInteractorInputProtocol {
   func getImageFromLocalStorage(key: String) -> UIImage? {
     // Get image From Local Storage
     var image: UIImage?
-      dataManager.retrieveImageDataFrom(key: key) { data in
+      dataManager.getImageDataFrom(key: key) { data in
         guard let data = data else { return }
         image = UIImage(data: data)
       }
     return image
   }
   
-  // MARK: - PRIVATE METHODS
+
   private func getOfflineImageWith(key: String) {
     let dataManager = DataManager()
-    dataManager.retrieveImageDataFrom(key: key) { data in
+    dataManager.getImageDataFrom(key: key) { data in
       guard let data = data else { return }
       if let image = UIImage(data: data) {
         self.presenter?.loadImage(image)
@@ -59,7 +58,7 @@ class MovieDetailInteractor: MovieDetailInteractorInputProtocol {
   
   private func downloadImage(of movie: Movie, key: String) {
     guard let path = movie.backdropPath else { return }
-    let fullPath: String = "\(APIUrls.img.rawValue)\(path)"
+    let fullPath: String = "\(APIServiceUrls.image.rawValue)\(path)"
     let cache = cacheDataManager.imageCache
     DispatchQueue.global(qos: .background).async {
       guard
