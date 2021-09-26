@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "iconx2.jpeg",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
@@ -36,11 +37,13 @@
       "size" : "60x60"
     },
     {
+      "filename" : "iconx3.jpeg",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
+      "filename" : "icon.jpeg",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
