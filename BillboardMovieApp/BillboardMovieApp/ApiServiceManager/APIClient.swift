@@ -5,17 +5,14 @@
 //  Created by Meli on 9/26/21.
 //
 //
-// Examples:
-// https://api.themoviedb.org/3/movie/popular?api_key=157b108f1f2d275c12e9092b4b2bcdd9
-//
 import Foundation
 import Alamofire
 import AlamofireObjectMapper
 import ObjectMapper
 
 protocol APIResponseProtocol {
-  func fetchedResult(data: MovieResults)
-  func fetchedGenres(data: Genres)
+  func getMovieResult(data: MovieResults)
+  func getMovieGenres(data: Genres)
   func onFailure(_ error: Error)
 }
 
@@ -24,15 +21,8 @@ protocol APIClientProtocol: AnyObject {
   func getGenreList(url: APIServiceUrls, release: APIMovieCategoryParams, lang: MovieLanguage)
 }
 
-// MARK: - CONNECTIVITY
-// Helps to know if device is connected to internet
-class Connectivity {
-  class var isConnectedToInternet: Bool {
-    return NetworkReachabilityManager()?.isReachable ?? false
-  }
-}
 
-// MARK: - CLIENT
+// MARK: - Call to api services movies and genres
 class APIClient: APIClientProtocol {
   
   var delegate: APIResponseProtocol?
@@ -47,7 +37,7 @@ class APIClient: APIClientProtocol {
       switch response.result {
       case .success(var results):
         results.category = release
-        self.delegate?.fetchedResult(data: results)
+        self.delegate?.getMovieResult(data: results)
       case .failure(let error):
         self.delegate?.onFailure(error)
       }
@@ -61,7 +51,7 @@ class APIClient: APIClientProtocol {
     Alamofire.request(URL, parameters: params).responseObject { (response: DataResponse<Genres>) in
       switch response.result {
       case .success(let results):
-        self.delegate?.fetchedGenres(data: results)
+        self.delegate?.getMovieGenres(data: results)
       case .failure(let error):
         self.delegate?.onFailure(error)
       }
@@ -83,5 +73,12 @@ class APIClient: APIClientProtocol {
         break
       }
     }
+  }
+}
+
+// check connection to internet
+class ConnectivityToIntenet {
+  class var isConnectedToInternet: Bool {
+    return NetworkReachabilityManager()?.isReachable ?? false
   }
 }

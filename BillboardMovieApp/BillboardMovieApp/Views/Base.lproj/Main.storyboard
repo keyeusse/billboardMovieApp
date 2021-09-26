@@ -317,10 +317,10 @@
     </scenes>
     <designables>
         <designable name="Nsr-cx-2x5">
-            <size key="intrinsicContentSize" width="95" height="18"/>
+            <size key="intrinsicContentSize" width="95" height="30"/>
         </designable>
         <designable name="eAp-q3-PRr">
-            <size key="intrinsicContentSize" width="107" height="23"/>
+            <size key="intrinsicContentSize" width="107" height="35"/>
         </designable>
     </designables>
     <resources>

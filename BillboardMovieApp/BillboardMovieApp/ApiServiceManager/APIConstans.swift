@@ -2,12 +2,12 @@
 //  Constants.swift
 //  BillboardMovieApp
 //
-//  Created by Meli on 9/24/21.
+//  Created by Meli on 9/26/21.
 //
 
 import Foundation
 
-// MARK: VALUES
+// Headers to request
 public struct HeaderRequest {
   let auth: String = "Authorization"
   let key: String = "157b108f1f2d275c12e9092b4b2bcdd9"
@@ -17,15 +17,16 @@ public enum MovieCategories: String {
   case popular = "Popular"
   case topRated = "Top Rated"
   case upcoming = "Upcoming"
+  
 }
 
+//Later, we can set more languages
 public enum MovieLanguage: String {
   case US = "en-US"
-  case MX = "es-MX"
 }
 
-// MARK: VIDEO PARAMS
-public let YouTubeParams: [String: Any] = [
+// Video params to rearch in youtube
+public let VideoYouTubeParams: [String: Any] = [
   "autoplay": 0,
   "playsinline" : 1,
   "enablejsapi": 1,
@@ -38,7 +39,7 @@ public let YouTubeParams: [String: Any] = [
   "iv_load_policy": 3
 ]
 
-// MARK: API
+// Api urls to call api movies
 public enum APIServiceUrls: String {
   case movie = "https://api.themoviedb.org/3/movie/"
   case image = "http://image.tmdb.org/t/p/w500"
@@ -51,11 +52,6 @@ public enum APIServiceParams: String {
   case key = "api_key"
   case lang = "language"
 }
-
-//https://api.themoviedb.org/3/genre/movie/list?api_key=d21684866ab7c4cdf0891ef667519e53&language=es-MX
-//https://api.themoviedb.org/3/genre/tv/list?api_key=d21684866ab7c4cdf0891ef667519e53&language=es-MX
-//https://api.themoviedb.org/3/movie/genre
-//https://api.themoviedb.org/3/movie/upcoming?api_key=157b108f1f2d275c12e9092b4b2bcdd9&language=es-MX
 
 public enum APIMovieCategoryParams: String {
   case popular = "popular"
@@ -73,6 +69,7 @@ public enum APIRequestEncoding {
   case json
   case url
 }
+
 public enum APIResponseError: Error {
   case jsonMapping(String)
   case statusCode(Int)
