@@ -3,7 +3,8 @@ This project is a challenge by Rappi
 
 
 ## Video
-![ScreenShot](https://github.com/keyeusse/billboardMovieApp/blob/develop/BillboardVideo.mov)
+You can find the app video in this link
+    -- https://youtu.be/sqgdw0oIGAw
 
 ## Run project
 
