@@ -56,18 +56,23 @@ App has a VIPPER ARCHITECTURE, for that reason, this is the structrute inside it
 
 # Unit Test
 
-- BillboardMovieAppTests:  Project contains unit test for calling to API. MovieList and GenreList
+- BillboardMovieAppTests:  Project contains unit test for calling to API. 
+* MovieList 
+* GenreList
 
-
-# Preguntas
+##### Sesision of answer to challenge question
+# Questions
    
-## 1.- ¿En qué consiste el principio de responsabilidad única? ¿Cuál es su propósito?
+## 1.- ¿Single Responsibility Principle?
    
-   Este principio establece que cada clase, función, estructura o bloque de código tiene una tarea. El propósito es tener una arquitectura limpia, que al modificar un bloque de código el impacto sea grande y limpio. Esto además permite reutilizar y crear capas para el mejor mantenimiento.
+   Single Responsibility Principle (SRP) consist of every single part (module, clase, interface...) has an only responsability and functioning in code. This principle let us to have a code cleanning project,  strongly and completly disconnected, and developer can change any module with load impact.
       
-## 2.- ¿Qué características tiene, según su opinión, un “buen” código o código limpio?
+## 2.- ¿Cleanning code (my opinion)?
 
-   Un buen código comienza desde que es legible, variables simples, comentado, enfocado a las estructuras de datos mas que a las librerias o el lenguaje. Envitar errores de ausencia de datos `nil values`. 
-    Detectar si el código se repite mucho, entonces es factible una refactorización y quizas el uso de patrones de diseño pueda ser una solución *(sin caer en los antipatrones)*. La declaración explicita de datos, con el fin de ser claros en nuestros valores y evitar inferencia de tipos, entre otras técnicas. Respetar la arquitectura establecida. Y el uso de Unit Tests para asegurar el funcionamiento correcto del proyecto. 
+
+   * A nice and usefull code is strongly and totally disconnected and independent for other modules. Because, developer can change something and this is not so impacting.
+   * Use classes, imports, frameworks, api's... really neccesary.
+   * Implement cleaning architectures and participles. 
+   * Use a repository for segurity
 
 
