@@ -3,7 +3,6 @@
 //  BillboardMovieAppTests
 //
 //  Created by Meli on 9/26/21.
-//  Copyright © 2021 Rappi. All rights reserved.
 //
 
 import XCTest
@@ -24,11 +23,11 @@ class BillboardMovieAppTests: XCTestCase {
       self.apiClient = nil
     }
     
-    func getMoviesListTest() {
+    func testGetMoviesList() {
         self.apiClient?.getMovieList(url: .genreTV, release: .none, lang: .US)
     }
     
-    func getGenresListTest() {
+    func testGetGenresList() {
       self.apiClient?.getGenreList(url: .genreTV, release: .none, lang: .US)
     }
   }
